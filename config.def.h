@@ -245,7 +245,7 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_plus,        zoom,           {.f = +1} },
 	{ ControlMask,          XK_minus,       zoom,           {.f = -1} },
 	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_End,         externalpipe,   {.v = "rofi -dmenu -p 'buffer history' | co.py" } },
+	{ TERMMOD,              XK_F,           externalpipe,   {.v = "rofi -dmenu -p 'buffer history' | co.py" } },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
@@ -253,7 +253,6 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ XK_NO_MOD,            XK_Page_Up,     kscrollup,      {.i = -1} },
 	{ XK_NO_MOD,            XK_Page_Down,   kscrolldown,    {.i = -1} },
-	{ MODKEY,               'u',            externalpipe,   {.v = "xurls | eval dmenu $(dmenu_options) | xargs -r $BROWSER" } },
 };
 
 /*
