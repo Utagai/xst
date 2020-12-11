@@ -79,6 +79,7 @@ xrdb_load(void)
 
 		XRESOURCE_LOAD_STRING("font", font);
 		XRESOURCE_LOAD_STRING("termname", termname);
+		XRESOURCE_LOAD_STRING("utmp", utmp);
 
 		XRESOURCE_LOAD_INTEGER("blinktimeout", blinktimeout);
 		XRESOURCE_LOAD_INTEGER("bellvolume", bellvolume);
