@@ -2026,6 +2026,33 @@ strparse(void)
 }
 
 void
+notify_err(char *msg) {
+	// Allocate a buffer for the message.
+	size_t msgbuf_size = 1024;
+	char* msgbuf = calloc(msgbuf_size, sizeof(char));
+
+	// Build it.
+	msgbuf = strncat(msgbuf, msg, strlen(msg));
+	msgbuf = strcat(msgbuf, ": ");
+	char* errmsg = strerror(errno);
+	msgbuf = strncat(msgbuf, errmsg, strlen(errmsg));
+
+	// Execute.
+	char *cmd = "/home/may/dotfiles/scripts/notif.sh";
+	char *argv[4];
+	argv[0] = cmd;
+	argv[1] = msgbuf;
+	argv[2] = "xst";
+	argv[3] = NULL;
+	// If we fail here, we've already done what we can. Just give up. We're done
+	// for. It's over. There's no hope. The city has fallen. I'm hungry.
+	execvp(cmd, argv);
+
+	// Free the msg buffer memory.
+	free(msgbuf);
+}
+
+void
 externalpipe(const Arg *arg)
 {
 	int to[2];
@@ -2046,11 +2073,19 @@ externalpipe(const Arg *arg)
 		dup2(to[0], STDIN_FILENO);
 		close(to[0]);
 		close(to[1]);
-		execvp(((char **)arg->v)[0], (char **)arg->v);
-		fprintf(stderr, "st: execvp %s\n", ((char **)arg->v)[0]);
+		char *cmd = "fish";
+		char *argv[4];
+		argv[0] = "fish";
+		argv[1] = "-c";
+		argv[2] = (char*)arg->v;
+		argv[3] = NULL;
+		if (execvp(cmd, argv) != 0) {
+			notify_err("failed to execute command for externalpipe");
+		}
 		perror("failed");
 		exit(0);
 	}
+
 
 	close(to[0]);
 	/* ignore sigpipe for now, in case child exists early */
@@ -2061,8 +2096,8 @@ externalpipe(const Arg *arg)
 		lastpos = MIN(tlinehistlen(n) + 1, term.col) - 1;
 		if (lastpos < 0)
 			break;
-        if (lastpos == 0)
-            continue;
+		if (lastpos == 0)
+			continue;
 		end = &bp[lastpos + 1];
 		for (; bp < end; ++bp)
 			if (xwrite(to[1], buf, utf8encode(bp->u, buf)) < 0)
